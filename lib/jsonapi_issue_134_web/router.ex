@@ -19,8 +19,9 @@ defmodule JsonapiIssue134Web.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", JsonapiIssue134Web do
-  #   pipe_through :api
-  # end
+  scope "/api", JsonapiIssue134Web do
+    pipe_through :api
+
+    resources "/posts", PostController, except: [:new, :edit]
+  end
 end
