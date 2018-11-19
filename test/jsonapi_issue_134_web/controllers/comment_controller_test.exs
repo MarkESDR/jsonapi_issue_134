@@ -39,6 +39,7 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
   end
 
   describe "jsonapi" do
+    @describetag :jsonapi
     setup [:create_comment]
 
     test "allows valid includes", %{conn: conn, comment: comment} do
