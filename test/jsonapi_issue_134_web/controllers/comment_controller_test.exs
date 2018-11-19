@@ -4,6 +4,9 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
   alias JsonapiIssue134.Content
   alias JsonapiIssue134.Content.Comment
 
+  @post_attrs %{
+    name: "some post"
+  }
   @create_attrs %{
     body: "some body"
   }
@@ -12,8 +15,15 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
   }
   @invalid_attrs %{body: nil}
 
+  def fixture(:post) do
+    {:ok, post} = Content.create_post(@post_attrs)
+    post
+  end
+
   def fixture(:comment) do
-    {:ok, comment} = Content.create_comment(@create_attrs)
+    %{id: post_id} = fixture(:post)
+    attrs = Map.merge(@create_attrs, %{post_id: post_id})
+    {:ok, comment} = Content.create_comment(attrs)
     comment
   end
 
@@ -30,7 +40,9 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
 
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.comment_path(conn, :create), comment: @create_attrs)
+      %{id: post_id} = fixture(:post)
+      attrs = Map.merge(@create_attrs, %{post_id: post_id})
+      conn = post(conn, Routes.comment_path(conn, :create), comment: attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, Routes.comment_path(conn, :show, id))

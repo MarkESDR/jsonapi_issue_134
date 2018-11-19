@@ -70,9 +70,12 @@ defmodule JsonapiIssue134.ContentTest do
     @invalid_attrs %{body: nil}
 
     def comment_fixture(attrs \\ %{}) do
+      %{id: post_id} = post_fixture()
+
       {:ok, comment} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{post_id: post_id})
         |> Content.create_comment()
 
       comment
@@ -89,7 +92,9 @@ defmodule JsonapiIssue134.ContentTest do
     end
 
     test "create_comment/1 with valid data creates a comment" do
-      assert {:ok, %Comment{} = comment} = Content.create_comment(@valid_attrs)
+      %{id: post_id} = post_fixture()
+      attrs = Map.merge(@valid_attrs, %{post_id: post_id})
+      assert {:ok, %Comment{} = comment} = Content.create_comment(attrs)
       assert comment.body == "some body"
     end
 
