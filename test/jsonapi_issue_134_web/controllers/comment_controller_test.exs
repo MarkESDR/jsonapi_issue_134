@@ -37,7 +37,7 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
 
       assert %{
                "id" => id,
-               "body" => "some body"
+               "attributes" => %{"body" => "some body"}
              } = json_response(conn, 200)["data"]
     end
 
@@ -52,13 +52,14 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
 
     test "renders comment when data is valid", %{conn: conn, comment: %Comment{id: id} = comment} do
       conn = put(conn, Routes.comment_path(conn, :update, comment), comment: @update_attrs)
+      id = Integer.to_string(id, 10)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.comment_path(conn, :show, id))
 
       assert %{
                "id" => id,
-               "body" => "some updated body"
+               "attributes" => %{"body" => "some updated body"}
              } = json_response(conn, 200)["data"]
     end
 
