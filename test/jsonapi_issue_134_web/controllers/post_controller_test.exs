@@ -37,7 +37,7 @@ defmodule JsonapiIssue134Web.PostControllerTest do
 
       assert %{
                "id" => id,
-               "name" => "some name"
+               "attributes" => %{"name" => "some name"}
              } = json_response(conn, 200)["data"]
     end
 
@@ -52,13 +52,14 @@ defmodule JsonapiIssue134Web.PostControllerTest do
 
     test "renders post when data is valid", %{conn: conn, post: %Post{id: id} = post} do
       conn = put(conn, Routes.post_path(conn, :update, post), post: @update_attrs)
+      id = Integer.to_string(id, 10)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.post_path(conn, :show, id))
 
       assert %{
                "id" => id,
-               "name" => "some updated name"
+               "attributes" => %{"name" => "some updated name"}
              } = json_response(conn, 200)["data"]
     end
 
