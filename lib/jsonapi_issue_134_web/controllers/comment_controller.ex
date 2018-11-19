@@ -3,6 +3,9 @@ defmodule JsonapiIssue134Web.CommentController do
 
   alias JsonapiIssue134.Content
   alias JsonapiIssue134.Content.Comment
+  alias JsonapiIssue134Web.CommentView
+
+  plug JSONAPI.QueryParser, [view: CommentView] when action in [:show]
 
   action_fallback JsonapiIssue134Web.FallbackController
 
@@ -21,7 +24,8 @@ defmodule JsonapiIssue134Web.CommentController do
   end
 
   def show(conn, %{"id" => id}) do
-    comment = Content.get_comment!(id)
+    include = get_in(conn, [Access.key(:assigns), :jsonapi_query, Access.key(:include)])
+    comment = Content.get_comment!(id, include)
     render(conn, "show.json", data: comment)
   end
 

@@ -131,7 +131,11 @@ defmodule JsonapiIssue134.Content do
       ** (Ecto.NoResultsError)
 
   """
-  def get_comment!(id), do: Repo.get!(Comment, id)
+  def get_comment!(id, preloads \\ []) do
+    Comment
+    |> preload(^preloads)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a comment.

@@ -38,6 +38,19 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
     end
   end
 
+  describe "jsonapi" do
+    setup [:create_comment]
+
+    test "allows valid includes", %{conn: conn, comment: comment} do
+      conn = get(conn, Routes.comment_path(conn, :show, comment, include: "post"))
+
+      assert %{
+               "data" => %{"relationships" => %{"post" => %{"data" => %{"id" => id}}}},
+               "included" => [%{"type" => "posts", "id" => id}]
+             } = json_response(conn, 200)
+    end
+  end
+
   describe "create comment" do
     test "renders comment when data is valid", %{conn: conn} do
       %{id: post_id} = fixture(:post)

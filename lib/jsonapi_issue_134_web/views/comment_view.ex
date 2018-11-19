@@ -4,4 +4,8 @@ defmodule JsonapiIssue134Web.CommentView do
   def fields do
     [:body]
   end
+
+  def relationships do
+    [post: JsonapiIssue134Web.PostView]
+  end
 end
