@@ -23,5 +23,6 @@ defmodule JsonapiIssue134Web.Router do
     pipe_through :api
 
     resources "/posts", PostController, except: [:new, :edit]
+    resources "/comments", CommentController, except: [:new, :edit]
   end
 end
