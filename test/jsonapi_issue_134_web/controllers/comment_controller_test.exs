@@ -52,8 +52,9 @@ defmodule JsonapiIssue134Web.CommentControllerTest do
     end
 
     test "returns 400 on bad include", %{conn: conn, comment: comment} do
-      conn = get(conn, Routes.comment_path(conn, :show, comment, include: "author"))
-      assert json_response(conn, 400)["errors"] != %{}
+      assert_error_sent 400, fn ->
+        get(conn, Routes.comment_path(conn, :show, comment, include: "blahblahblah"))
+      end
     end
   end
 
